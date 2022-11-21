@@ -149,22 +149,34 @@ def rightClickCallback(event):
     print("Hi")
 
 inFolder = False
+currentFolder = ""
 def leftClickCallback(event):
     global inFolder
+    global currentFolder
 
     if inFolder:
-        inFolder = False
+        #Leave folder if there's a click outside the folder bounds
+        if event.x < 100 or event.x > 500 or event.y < 350 or event.y > 850:
+            inFolder = False
     else:
-        inFolder = True
+        #Check to see if any folders are being clicked on
+        for item in items:
+            if item["type"] == "folder":
+                imageCoordinates = getItemImageCoordinates(item)
+                if event.x > imageCoordinates[0] and event.x < imageCoordinates[0] + 100 and event.y > imageCoordinates[1] and event.y < imageCoordinates[1] + 100:
+                    currentFolder = item["name"]
+                    inFolder = True
+                    break
+
         
 
-def getAppImageCoordinates(item):
+def getItemImageCoordinates(item):
     if item["folder"] == "" or item["folder"] == "n/a":
         return (75 + item["x-order"] * 120, 150 + item["y-order"] * 150)
     else:
         return (125 + item["x-order"] * 120, 400 + item["y-order"] * 150)
 
-def getAppNameCoodinates(item):
+def getItemNameCoodinates(item):
     if item["folder"] == "" or item["folder"] == "n/a":
         return (125 + item["x-order"] * 120, 265 + item["y-order"] * 150)
     else:
@@ -180,19 +192,19 @@ def renderBackground():
 def renderHomeScreen():
     for item in items:
         if item["folder"] == "" or item["folder"] == "n/a":
-            imageCoordinates = getAppImageCoordinates(item)
-            nameCoordinates = getAppNameCoodinates(item)
+            imageCoordinates = getItemImageCoordinates(item)
+            nameCoordinates = getItemNameCoodinates(item)
             canvas.create_text(nameCoordinates[0], nameCoordinates[1], text=item["name"])
             canvas.create_image(imageCoordinates[0], imageCoordinates[1], anchor=NW, image=item["image"])
     canvas.pack()
 
 def renderFolder(folderName):
-    canvas.create_rectangle(100,350, 500, 850, fill='gray')
+    canvas.create_rectangle(100, 350, 500, 850, fill='gray')
     canvas.create_text(300, 300, text=folderName, font=font.Font(family='Helvetica', size=32))
     for item in items:
         if item["folder"] == folderName:
-            imageCoordinates = getAppImageCoordinates(item)
-            nameCoordinates = getAppNameCoodinates(item)
+            imageCoordinates = getItemImageCoordinates(item)
+            nameCoordinates = getItemNameCoodinates(item)
             canvas.create_text(nameCoordinates[0], nameCoordinates[1], text=item["name"])
             canvas.create_image(imageCoordinates[0], imageCoordinates[1], anchor=NW, image=item["image"])
     canvas.pack()
@@ -205,6 +217,6 @@ while True:
     renderBackground()
     renderHomeScreen()
     if inFolder:
-        renderFolder("SomeFolder")
+        renderFolder(currentFolder)
     root.update_idletasks()
     root.update()
