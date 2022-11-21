@@ -33,7 +33,7 @@ items = [
     "folder": "", 
     "x-order": 0,
     "y-order": 0,
-    "categories": ["Built-in"]
+    "category": "Built-in"
     },
     {
     "name": "Messages", 
@@ -42,7 +42,7 @@ items = [
     "folder": "", 
     "x-order": 1,
     "y-order": 0,
-    "categories": ["Built-in"]
+    "category": "Built-in"
     },
     {
     "name": "Settings", 
@@ -51,7 +51,7 @@ items = [
     "folder": "", 
     "x-order": 2,
     "y-order": 0,
-    "categories": ["Built-in"]
+    "category": "Built-in"
     },
     {
     "name": "Clash Of Clans", 
@@ -60,7 +60,7 @@ items = [
     "folder": "", 
     "x-order": 3,
     "y-order": 0,
-    "categories": ["Games"]
+    "category": "Games"
     },
     {
     "name": "Candy Crush", 
@@ -69,7 +69,7 @@ items = [
     "folder": "", 
     "x-order": 0,
     "y-order": 1,
-    "categories": ["Games"]
+    "category": "Games"
     },
     {
     "name": "Clash Of Clans", 
@@ -78,7 +78,7 @@ items = [
     "folder": "", 
     "x-order": 1,
     "y-order": 1,
-    "categories": ["Games"]
+    "category": "Games"
     },
     {
     "name": "Tinder", 
@@ -87,7 +87,7 @@ items = [
     "folder": "", 
     "x-order": 2,
     "y-order": 1,
-    "categories": ["Dating"]
+    "category": "Dating"
     },
     {
     "name": "OkCupid", 
@@ -96,7 +96,7 @@ items = [
     "folder": "", 
     "x-order": 3,
     "y-order": 1,
-    "categories": ["Dating"]
+    "category": "Dating"
     },
     {
     "name": "SomeFolder", 
@@ -114,7 +114,7 @@ items = [
     "folder": "SomeFolder", 
     "x-order": 0,
     "y-order": 0,
-    "categories": ["Test"]
+    "category": "Test"
     },
     {
     "name": "SomeApp2", 
@@ -123,7 +123,7 @@ items = [
     "folder": "SomeFolder", 
     "x-order": 1,
     "y-order": 0,
-    "categories": ["Test"]
+    "category": "Test"
     },
     {
     "name": "SomeApp3", 
@@ -132,7 +132,7 @@ items = [
     "folder": "SomeFolder", 
     "x-order": 2,
     "y-order": 0,
-    "categories": ["Test"]
+    "category": "Test"
     },
     {
     "name": "SomeApp4", 
@@ -141,12 +141,72 @@ items = [
     "folder": "SomeFolder", 
     "x-order": 0,
     "y-order": 1,
-    "categories": ["Test"]
+    "category": "Test"
     },
 ]
 
+#Planning on having right click activate our solution where it automatically organizes the apps
 def rightClickCallback(event):
-    print("Hi")
+    #Remove all existing folders and references to folders
+    i = 0
+    while i < len(items):
+        if items[i]["type"] == "folder":
+            items.pop(i)
+            continue
+        if items[i]["folder"] != "n/a":
+            #If an app was already on the home screen
+            if items[i]["folder"] == "":
+                i += 1
+                continue
+
+            
+            items[i]["folder"] = ""
+            #Find new positions for any apps that were in folders
+            newPosition = (0, 0)
+            for y in range(6):
+                for x in range(4):
+                    newPosition = (x, y)
+                    for positionCheckItem in items:
+                        if positionCheckItem["folder"] == "" and positionCheckItem["x-order"] == x and positionCheckItem["y-order"] == y:
+                            newPosition = (0, 0)
+                            break
+                    if newPosition != (0, 0):
+                        break
+                if newPosition != (0, 0):
+                    break
+            items[i]["x-order"] = newPosition[0]
+            items[i]["y-order"] = newPosition[1]
+        i += 1
+    
+    #Categorize apps
+    categories = {}
+    for app in items:
+        if app["category"] not in categories:
+            categories[app["category"]] = [app["name"]]
+        else:
+            categories[app["category"]].append(app["name"])
+
+    categoryIndex = 0
+    #Create new folders for each category
+    for category in categories:
+        items.append({
+            "name": category, 
+            "type": "folder",
+            "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+            "folder": "n/a", 
+            "x-order": categoryIndex % 4,
+            "y-order": categoryIndex // 4,
+            "category": "n/a"
+        })
+        categoryIndex += 1
+
+    #Re-folder and reposition apps
+    for app in items:
+        if app["type"] != "folder":
+            app["folder"] = app["category"]
+            app["x-order"] = categories[app["category"]].index(app["name"]) % 3
+            app["y-order"] = categories[app["category"]].index(app["name"]) // 3
+        
 
 inFolder = False
 currentFolder = ""
@@ -169,13 +229,15 @@ def leftClickCallback(event):
                     break
 
         
-
+#Gets whatever coordinates an item's image should be at
 def getItemImageCoordinates(item):
+    #If the item isn't in a folder or the item is a folder itself...
     if item["folder"] == "" or item["folder"] == "n/a":
         return (75 + item["x-order"] * 120, 150 + item["y-order"] * 150)
     else:
         return (125 + item["x-order"] * 120, 400 + item["y-order"] * 150)
 
+#Gets whatever coordinates an item's name should be at
 def getItemNameCoodinates(item):
     if item["folder"] == "" or item["folder"] == "n/a":
         return (125 + item["x-order"] * 120, 265 + item["y-order"] * 150)
@@ -210,7 +272,7 @@ def renderFolder(folderName):
     canvas.pack()
 
 
-
+#Bind left and right click to callback functions
 canvas.bind("<Button-1>", leftClickCallback)
 canvas.bind("<Button-3>", rightClickCallback)
 while True:
