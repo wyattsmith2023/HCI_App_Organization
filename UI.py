@@ -29,7 +29,7 @@ items = [
     {
     "name": "Camera", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/Camera.png"), 
     "folder": "", 
     "x-order": 0,
     "y-order": 0,
@@ -38,7 +38,7 @@ items = [
     {
     "name": "Messages", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/Messages.png"), 
     "folder": "", 
     "x-order": 1,
     "y-order": 0,
@@ -47,7 +47,7 @@ items = [
     {
     "name": "Settings", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/Settings.png"), 
     "folder": "", 
     "x-order": 2,
     "y-order": 0,
@@ -65,16 +65,16 @@ items = [
     {
     "name": "Candy Crush", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/CandyCrush.png"), 
     "folder": "", 
     "x-order": 0,
     "y-order": 1,
     "category": "Games"
     },
     {
-    "name": "Clash Of Clans", 
+    "name": "Dragonvale", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/Dragonvale.png"), 
     "folder": "", 
     "x-order": 1,
     "y-order": 1,
@@ -83,7 +83,7 @@ items = [
     {
     "name": "Tinder", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/Tinder.png"), 
     "folder": "", 
     "x-order": 2,
     "y-order": 1,
@@ -92,7 +92,7 @@ items = [
     {
     "name": "OkCupid", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/OkCupid.png"), 
     "folder": "", 
     "x-order": 3,
     "y-order": 1,
@@ -101,7 +101,7 @@ items = [
     {
     "name": "SomeFolder", 
     "type": "folder",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/Folder.png"), 
     "folder": "n/a",
     "x-order": 0,
     "y-order": 2,
@@ -110,7 +110,7 @@ items = [
     {
     "name": "SomeApp1", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/AppStore.png"), 
     "folder": "SomeFolder", 
     "x-order": 0,
     "y-order": 0,
@@ -119,7 +119,7 @@ items = [
     {
     "name": "SomeApp2", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/AppStore.png"), 
     "folder": "SomeFolder", 
     "x-order": 1,
     "y-order": 0,
@@ -128,7 +128,7 @@ items = [
     {
     "name": "SomeApp3", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/AppStore.png"), 
     "folder": "SomeFolder", 
     "x-order": 2,
     "y-order": 0,
@@ -137,7 +137,7 @@ items = [
     {
     "name": "SomeApp4", 
     "type": "app",
-    "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+    "image": PhotoImage(file="Assets/AppStore.png"), 
     "folder": "SomeFolder", 
     "x-order": 0,
     "y-order": 1,
@@ -192,7 +192,7 @@ def rightClickCallback(event):
         items.append({
             "name": category, 
             "type": "folder",
-            "image": PhotoImage(file="Assets/ClashOfClans.png"), 
+            "image": PhotoImage(file="Assets/Folder.png"), 
             "folder": "n/a", 
             "x-order": categoryIndex % 4,
             "y-order": categoryIndex // 4,
@@ -274,7 +274,7 @@ def renderFolder(folderName):
 
 #Bind left and right click to callback functions
 canvas.bind("<Button-1>", leftClickCallback)
-canvas.bind("<Button-3>", rightClickCallback)
+canvas.bind("<Button-2>", rightClickCallback)
 while True:
     renderBackground()
     renderHomeScreen()
